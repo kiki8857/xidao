@@ -1,0 +1,21 @@
+final_test_mse_loss: 606.2662973403931
+mae: 18.906410217285156
+passed_thresholds: false
+r2: 0.6531250476837158
+rmse: !!python/object/apply:numpy._core.multiarray.scalar
+- !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  zqyU/JibN0A=

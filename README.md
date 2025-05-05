@@ -1,54 +1,69 @@
-# 数据驱动的铣刀寿命预测
+# 锡刀切削刀具磨损预测系统
 
-本项目旨在根据 `开题.md` 文件中的研究内容，利用多源传感信号（如振动、切削力、声发射）和机器学习/深度学习技术，预测铣刀的剩余使用寿命（RUL）。
+基于PHM2010数据集的切削刀具磨损预测系统，使用机器学习和深度学习方法预测刀具磨损。
+
+## 项目特点
+
+- 数据预处理与特征工程
+- 基于BP神经网络的刀具磨损预测
+- 使用贝叶斯优化自动调整超参数
+- 可视化分析预测结果
+
+## 主要功能
+
+- 原始切削力信号的预处理与清洗
+- 时域、频域和小波域特征提取
+- 特征选择与降维
+- 基于随机森林的特征重要性分析
+- 基于BP神经网络的磨损预测
+- 超参数调优与模型评估
+- 结果可视化
 
 ## 项目结构
 
 ```
 xidao/
-├── config/                  # 配置文件目录
-│   └── config.yaml          # 项目配置 (数据路径, 模型参数等)
-├── data/
-│   ├── raw/                 # 原始数据目录 (例如 PHM2010 数据集)
-│   └── processed/           # 处理后的数据 (特征文件等)
-├── notebooks/               # Jupyter Notebooks (探索性分析, 实验)
-├── src/
-│   ├── data_processing/     # 数据处理模块
-│   │   ├── __init__.py
-│   │   ├── loader.py          # 数据加载
-│   │   ├── preprocessing.py   # 信号预处理 (去噪, 平滑)
-│   │   ├── feature_extraction.py # 特征提取 (时域, 频域, 时频域)
-│   │   ├── feature_selection.py  # 特征筛选 (相关性分析)
-│   │   └── dimensionality_reduction.py # 特征降维 (PCA)
-│   ├── models/              # 模型定义模块
-│   │   ├── __init__.py
-│   │   ├── bpnn.py            # BP 神经网络模型
-│   │   ├── random_forest.py   # 随机森林模型
-│   │   └── model_fusion.py    # 模型融合策略
-│   ├── training/            # 模型训练与评估模块
-│   │   ├── __init__.py
-│   │   ├── train.py           # 主训练脚本
-│   │   ├── evaluate.py        # 模型评估脚本
-│   │   └── tuning.py          # 超参数调优 (贝叶斯优化)
-│   └── utils/               # 工具函数模块
-│       ├── __init__.py
-│       ├── logger.py          # 日志记录
-│       └── plotting.py        # 结果可视化
-├── requirements.txt         # 项目依赖库
-└── README.md                # 项目说明文档
+├── config/           # 配置文件
+├── data/             # 数据文件夹
+│   ├── raw/          # 原始数据
+│   └── processed/    # 处理后的数据
+├── scripts/          # 脚本文件
+├── results/          # 结果保存
+└── logs/             # 日志文件
 ```
 
-## 主要研究内容
+## 使用方法
 
-1.  **信号采集与特征提取**: 处理多源信号，提取时域、频域、时频域特征。
-2.  **特征筛选与降维**: 使用相关性分析筛选特征，PCA 降维。
-3.  **模型构建与调优**: 实现并对比随机森林 (RF) 和反向传播神经网络 (BPNN)，使用贝叶斯优化进行超参数调整。
-4.  **模型评估**: 使用 MAE, RMSE, R² 等指标评估模型性能。
-5.  **(可选) 模型融合**: 探索 RF 和 BPNN 的融合策略。
+1. 安装依赖
+```
+pip install -r requirements.txt
+```
 
-## 如何运行
+2. 预处理数据
+```
+python scripts/preprocess_data.py --config config/config.yaml
+```
 
-1.  **安装依赖**: `pip install -r requirements.txt`
-2.  **准备数据**: 将原始数据放入 `data/raw/` 目录。
-3.  **修改配置**: 根据需要调整 `config/config.yaml` 中的参数。
-4.  **运行训练**: `python src/training/train.py` (或通过其他入口脚本) # xidao
+3. 提取特征
+```
+python scripts/engineer_features.py --config config/config.yaml
+```
+
+4. 训练模型
+```
+python scripts/train_evaluate_bpnn.py --config config/config.yaml
+```
+
+5. 调整超参数
+```
+python scripts/tune_hyperparameters.py --config config/config.yaml --model bpnn
+```
+
+## 技术栈
+
+- Python 3.9+
+- PyTorch
+- NumPy, Pandas, Scikit-learn
+- Matplotlib, Seaborn
+- Optuna (贝叶斯优化)
+- PyWavelets (小波分析)

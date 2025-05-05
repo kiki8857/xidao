@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 虚拟环境
+venv/
+env/
+xidao/
+
+# 分布式文件
+.DS_Store
+Thumbs.db
+
+# 日志文件
+*.log
+
+# 本地配置文件
+.env
+
+# 大型数据文件
+data/raw/
+data/processed/
+
+# 结果和模型文件（可选择性排除）
+# results/
+
+# IDE相关文件
+.idea/
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints 

@@ -1,0 +1,114 @@
+data:
+  dataset_path: data/raw/PHM_2010/
+  processed_data_dir: data/processed/
+  raw_data_dir: data/raw/
+dimensionality_reduction:
+  pca_n_components: 0.9
+feature_extraction:
+  frequency_domain_features:
+  - main_frequency_amplitude
+  - energy_ratio
+  time_domain_features:
+  - mean
+  - std
+  - rms
+  - skewness
+  - kurtosis
+  - peak
+  - crest_factor
+  wavelet_packet:
+    level: 4
+feature_selection:
+  n_features_to_select: 12
+  pearson_threshold: 0.8
+  spearman_threshold: 0.8
+logging:
+  log_file: project.log
+  log_level: INFO
+models:
+  bpnn:
+    activation: relu
+    batch_size: 8
+    dropout_rate: 0.0
+    early_stopping_patience: 50
+    epochs: 5000
+    hidden_layers:
+    - 128
+    - 64
+    input_size: 4
+    l1_weight: 0.0
+    learning_rate: 0.014672
+    lm_damping: 0.1
+    min_error: 1.0e-05
+    output_activation: linear
+    output_size: 1
+    train_function: adam
+    use_lr_scheduler: false
+    weight_decay: 0.0001
+  random_forest:
+    bootstrap: true
+    max_depth: 15
+    min_samples_leaf: 1
+    min_samples_split: 2
+    model_path: results/random_forest_model.pkl
+    n_estimators: 100
+    random_state: 42
+preprocessing:
+  denoising_method: wavelet
+  smoothing_window: 5
+training:
+  cv_folds: 5
+  evaluation_metrics:
+  - mae
+  - rmse
+  - r2
+  model_type: bpnn
+  random_state: 42
+  target_metrics:
+    mae_threshold: 5.0
+    r2_threshold: 0.85
+    rmse_threshold: 5.0
+  test_experiments:
+  - c6
+  test_size: 0.2
+  train_experiments:
+  - c1
+  - c4
+tuning:
+  bayesian_optimization_iterations: 50
+  bpnn:
+    activation_options:
+    - relu
+    - tanh
+    - leaky_relu
+    batch_size_options:
+    - 8
+    - 16
+    - 32
+    - 64
+    dropout_rate_range:
+    - 0.0
+    - 0.5
+    hidden_layers_options:
+    - - 16
+    - - 32
+    - - 64
+    - - 32
+      - 16
+    - - 64
+      - 32
+    - - 128
+      - 64
+    - - 64
+      - 32
+      - 16
+    - - 32
+      - 16
+      - 8
+    learning_rate_range:
+    - 0.0001
+    - 0.05
+    weight_decay_range:
+    - 0.0001
+    - 0.01
+  optimization_metric: mae

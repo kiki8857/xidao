@@ -1,0 +1,32 @@
+best_params:
+  max_depth: 6
+  max_features: 0.5
+  min_samples_leaf: 1
+  min_samples_split: 9
+  n_estimators: 68
+mae: !!python/object/apply:numpy.core.multiarray.scalar
+- &id001 !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  0e0Vu1DGPUA=
+passed_thresholds: false
+r2: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  qAa+Cd220D8=
+rmse: !!python/object/apply:numpy.core.multiarray.scalar
+- *id001
+- !!binary |
+  Jp9cASg6QUA=

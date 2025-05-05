@@ -1,0 +1,54 @@
+activation: !!python/object/apply:numpy._core.multiarray.scalar
+- !!python/object/apply:numpy.dtype
+  args:
+  - U4
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - 16
+  - 4
+  - 8
+- !!binary |
+  cgAAAGUAAABsAAAAdQAAAA==
+batch_size: !!python/object/apply:numpy._core.multiarray.scalar
+- !!python/object/apply:numpy.dtype
+  args:
+  - i8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  CAAAAAAAAAA=
+dropout_rate: 0.0
+hidden_layers_str: !!python/object/apply:numpy._core.multiarray.scalar
+- !!python/object/apply:numpy.dtype
+  args:
+  - U9
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - 36
+  - 4
+  - 8
+- !!binary |
+  WwAAADEAAAAyAAAAOAAAACwAAAAgAAAANgAAADQAAABdAAAA
+learning_rate: 0.014672042777757535
+weight_decay: 0.0001

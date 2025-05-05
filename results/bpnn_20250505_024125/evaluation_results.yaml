@@ -1,0 +1,21 @@
+final_test_mse_loss: 1149.4977859497071
+mae: 30.786346435546875
+passed_thresholds: false
+r2: 0.2807246446609497
+rmse: !!python/object/apply:numpy._core.multiarray.scalar
+- !!python/object/apply:numpy.dtype
+  args:
+  - f8
+  - false
+  - true
+  state: !!python/tuple
+  - 3
+  - <
+  - null
+  - null
+  - null
+  - -1
+  - -1
+  - 0
+- !!binary |
+  Q9iLdWD/QEA=
