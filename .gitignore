@@ -24,8 +24,8 @@ data/processed/
 # 但允许示例数据
 !data/examples/
 
-# 结果和模型文件（可选择性排除）
-# results/
+# 结果和模型文件
+results/
 
 # IDE相关文件
 .idea/
