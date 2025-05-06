@@ -26,11 +26,29 @@ xidao/
 ├── config/           # 配置文件
 ├── data/             # 数据文件夹
 │   ├── raw/          # 原始数据
-│   └── processed/    # 处理后的数据
+│   ├── processed/    # 处理后的数据
+│   └── examples/     # 示例数据
 ├── scripts/          # 脚本文件
 ├── results/          # 结果保存
 └── logs/             # 日志文件
 ```
+
+## 数据说明
+
+本项目使用PHM2010数据集进行刀具磨损预测。由于原始数据集较大（约17GB），仓库中只包含少量示例数据。
+
+### 示例数据
+
+`data/examples/` 目录包含少量示例数据文件，用于测试脚本功能。
+
+### 获取完整数据集
+
+完整的PHM2010数据集可以从以下来源获取：
+
+1. PHM 2010官方网站：https://www.phmsociety.org/competition/phm/10
+2. NASA数据仓库：https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/
+
+下载完整数据集后，将文件解压到 `data/raw/PHM_2010/` 目录。
 
 ## 使用方法
 

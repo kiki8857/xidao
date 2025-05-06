@@ -21,6 +21,8 @@ Thumbs.db
 # 大型数据文件
 data/raw/
 data/processed/
+# 但允许示例数据
+!data/examples/
 
 # 结果和模型文件（可选择性排除）
 # results/
