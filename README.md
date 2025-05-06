@@ -86,78 +86,86 @@ python scripts/tune_hyperparameters.py --config config/config.yaml --model bpnn
 - Optuna (贝叶斯优化)
 - PyWavelets (小波分析)
 
-## 结果复现指南
+## 随机森林模型优化指南
 
-### 1. 删除已有的results目录
+本文档提供了关于如何训练和复现优化后的随机森林模型的详细说明。
 
-在运行实验前，可以选择删除已有的results目录，以保持工作空间整洁。可以使用以下命令：
+### 环境准备
 
-```bash
-# 删除全部results目录（确保您已经备份了任何需要保留的重要结果）
-rm -rf results/
+1. 确保已安装Python环境（推荐Python 3.9+）
+2. 安装所需依赖：
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-# 或选择性删除特定结果目录
-rm -rf results/rf_enhanced_*
+### 数据准备
+
+项目使用PHM 2010数据集，请确保数据已放置在指定位置：
+```
+data/raw/PHM_2010/
 ```
 
-### 2. 运行最优随机森林模型
+### 训练优化后的随机森林模型
 
-我们的最优模型配置已保存在`config/rf_optimized.yaml`文件中。该配置采用平衡泛化策略，在测试集上实现了较好的性能指标（R²: 0.711）。
+执行以下命令来训练优化版本的随机森林模型：
 
-按照以下步骤复现最优结果：
+```bash
+python scripts/train_enhanced_rf.py --config config/rf_optimized.yaml
+```
 
-1. 确保环境已正确配置
-   ```bash
-   # 激活虚拟环境（如果使用）
-   conda activate xidao
-   ```
+这个命令将使用`config/rf_optimized.yaml`中的优化配置训练随机森林模型，并将结果保存在`results/`目录下。
 
-2. 运行优化的随机森林训练脚本
-   ```bash
-   python scripts/train_enhanced_rf.py --config config/rf_optimized.yaml
-   ```
+### 关于优化配置
 
-3. 训练完成后，结果将保存在`results/rf_enhanced_[timestamp]/`目录中，包括：
-   - 训练日志 (`rf_enhanced.log`)
-   - 模型文件 (`rf_ensemble_model.joblib`)
-   - 特征重要性分析 (`feature_importance.csv`和`final_feature_importance.csv`)
-   - 测试集预测结果 (`ensemble_test_predictions.csv`)
-   - 评估指标 (`ensemble_evaluation_results.yaml`)
-   - 可视化结果 (`visualizations/`目录)
-
-### 性能指标
-
-当前最优配置在测试集上的性能：
-- MAE: 17.59
-- RMSE: 21.55
-- R²: 0.711
-
-### 模型配置特点
-
-当前最优配置（平衡泛化版本）的主要特点：
+当前最优配置有以下特点：
 
 1. **特征工程**：
-   - 使用小波包变换（层级：3）
-   - 保留统计特征和交互特征
-   - 特征选择采用中等强度阈值（重要性阈值：0.03）
+   - 使用小波包变换（3级分解）
+   - 提取时域与频域特征
+   - 添加统计特征和交互特征
 
-2. **集成模型**：
-   - 采用stacking集成策略
-   - 基础模型包含3个变体配置的随机森林
+2. **特征选择**：
+   - 使用相关性筛选（Spearman相关系数≥0.75，Pearson相关系数≥0.8）
+   - 递归特征消除
+   - 特征重要性阈值：0.03
+
+3. **随机森林参数**：
+   - 树数量：700
+   - 最大深度：8
+   - 最小分裂样本数：10
+   - 叶节点最小样本数：6
+   - 特征采样比例：0.6
+   - 样本采样比例：0.7
+   - 成本复杂度剪枝系数：0.02
+
+4. **集成学习**：
+   - 使用Stacking方法
+   - 基模型包含3个不同配置的随机森林
    - 元模型使用Ridge回归
 
-3. **正则化策略**：
-   - 适中的树深度控制（max_depth: 8）
-   - 平衡的树数量（n_estimators: 700）
-   - 合理的剪枝参数（ccp_alpha: 0.02）
+### 模型性能
 
-### 进一步改进方向
+优化后的随机森林模型在测试集（c6实验数据）上的性能：
+- MAE：17.59
+- RMSE：21.55
+- R²：0.711
 
-要进一步提升模型性能，可以考虑：
+### 结果说明
 
-1. 收集更多的训练数据
-2. 探索其它类型模型（如梯度提升树、深度神经网络）
-3. 进行更细致的特征工程
-4. 尝试不同的数据预处理策略
+训练后，结果将保存在`results/`目录下，包含：
+- 训练好的模型
+- 评估结果
+- 特征重要性可视化
+- 预测结果
 
-注意：根据`.gitignore`配置，`results/`目录不会被提交到GitHub仓库，确保您的实验结果不会占用远程仓库空间。
+请注意：`results/`目录已被添加到`.gitignore`文件中，不会被上传到GitHub。
+
+### 进一步优化方向
+
+如需进一步提升性能，可考虑：
+1. 收集更多训练数据
+2. 尝试其他类型的模型（如梯度提升树）
+3. 进一步细化特征工程
+4. 针对不同工况单独训练模型
+
+如有任何问题，请参考项目文档或联系项目维护者。
