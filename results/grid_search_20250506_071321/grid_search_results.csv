@@ -1,3 +1,0 @@
-hidden_layers,activation,learning_rate,dropout_rate,weight_decay,mae,rmse,r2,result_dir
-[32],tanh,0.01,0.0,0.0,inf,inf,-inf,/Users/xiaohudemac/cursor01/bishe/xidao/results/bpnn_20250506_071322
-[32],tanh,0.01,0.0,0.001,inf,inf,-inf,/Users/xiaohudemac/cursor01/bishe/xidao/results/bpnn_20250506_071331
