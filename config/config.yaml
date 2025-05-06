@@ -27,40 +27,25 @@ dimensionality_reduction:
 
 models:
   random_forest:
-    n_estimators: 100
-    max_depth: 15
-    min_samples_split: 2
-    min_samples_leaf: 1
-    bootstrap: true
-    random_state: 42
-    model_path: "results/random_forest_model.pkl"
-    
+    n_estimators_range: [30, 150]
+    max_depth_range: [3, 8]
+    # 其他 RF 参数
   bpnn:
-    input_size: 4  # 特征数量，由PCA结果决定
-    hidden_layers: [128, 64]  # 贝叶斯优化得到的最佳结构
-    output_size: 1
-    learning_rate: 0.014672  # 贝叶斯优化得到的最佳学习率
-    weight_decay: 0.0001  # 贝叶斯优化得到的最佳权重衰减
-    activation: 'relu'  # 贝叶斯优化得到的最佳激活函数
-    output_activation: 'linear'
-    dropout_rate: 0.0  # 贝叶斯优化得到的最佳dropout率
-    epochs: 5000
-    batch_size: 8  # 贝叶斯优化得到的最佳批量大小
-    use_lr_scheduler: false
-    train_function: 'adam'  # 支持'adam', 'sgd', 'rmsprop', 'trainlm'
-    lm_damping: 0.1
-    early_stopping_patience: 50
-    min_error: 0.00001
-    l1_weight: 0.0
-    # 学习率调度器配置
+    hidden_layer_sizes: [100, 50] # 示例隐藏层结构
+    activation: 'relu'
+    optimizer: 'adam'
+    learning_rate_range: [0.0001, 0.01]
+    epochs: 100
+    batch_size: 32
+    early_stopping_patience: 10
+  fusion:
+    # 融合策略参数 (例如线性回归的权重)
+    pass
 
 training:
   test_size: 0.2
   cv_folds: 5 # 交叉验证折数
   random_state: 42
-  model_type: 'bpnn'  # 指定模型类型为BPNN
-  train_experiments: ['c1', 'c4']  # 用于训练的实验
-  test_experiments: ['c6']  # 用于测试的实验
   evaluation_metrics: ['mae', 'rmse', 'r2']
   target_metrics:
     mae_threshold: 5.0
@@ -68,15 +53,7 @@ training:
     r2_threshold: 0.85
 
 tuning:
-  bayesian_optimization_iterations: 50  # 贝叶斯优化迭代次数
-  optimization_metric: 'mae'  # 优化的指标
-  bpnn:
-    learning_rate_range: [0.0001, 0.05]
-    weight_decay_range: [0.0001, 0.01]
-    dropout_rate_range: [0.0, 0.5]
-    batch_size_options: [8, 16, 32, 64]
-    activation_options: ['relu', 'tanh', 'leaky_relu']
-    hidden_layers_options: [[16], [32], [64], [32, 16], [64, 32], [128, 64], [64, 32, 16], [32, 16, 8]]
+  bayesian_optimization_iterations: 50 # 贝叶斯优化迭代次数
 
 logging:
   log_file: 'project.log'
