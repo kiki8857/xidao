@@ -1,0 +1,125 @@
+data:
+  dataset_path: data/raw/PHM_2010/
+  processed_data_dir: data/processed/
+  raw_data_dir: data/raw/
+dimensionality_reduction:
+  pca_n_components: 0.95
+  use_pca: true
+feature_extraction:
+  frequency_domain_features:
+  - main_frequency_amplitude
+  - energy_ratio
+  - spectral_entropy
+  - spectral_centroid
+  - dominant_frequency
+  interaction_features: true
+  statistical_features: true
+  time_domain_features:
+  - mean
+  - std
+  - rms
+  - skewness
+  - kurtosis
+  - peak
+  - crest_factor
+  - variance
+  - min
+  - max
+  - median
+  - range
+  wavelet_packet:
+    level: 4
+feature_selection:
+  importance_threshold: 0.03
+  mutual_info: true
+  n_features_to_select: 6
+  pearson_threshold: 0.85
+  spearman_threshold: 0.75
+  use_rfe: true
+grid_search:
+  cv_folds: 3
+  enabled: false
+  n_jobs: -1
+  param_grid:
+    batch_size:
+    - 16
+    - 32
+    - 64
+    dropout_rate:
+    - 0.1
+    - 0.2
+    - 0.3
+    hidden_layers:
+    - - 32
+      - 16
+    - - 64
+      - 32
+    - - 128
+      - 64
+    learning_rate:
+    - 0.01
+    - 0.005
+    - 0.001
+    optimizer:
+    - adam
+    - rmsprop
+  scoring: neg_mean_absolute_error
+logging:
+  log_file: bpnn_training.log
+  log_level: INFO
+models:
+  bpnn:
+    activation: relu
+    batch_normalization: true
+    batch_size: 16
+    dropout_rate: 0.105
+    early_stopping_patience: 30
+    epochs: 300
+    hidden_layers:
+    - 64
+    - 32
+    l1_weight: 0.0001
+    learning_rate: 0.0085
+    lm_damping: 0.1
+    lr_scheduler_params:
+      eta_min: 0
+      factor: 0.3
+      gamma: 0.3
+      min_lr: 5.0e-05
+      patience: 15
+      step_size: 30
+      t_max: 150
+      type: reduce_on_plateau
+    min_error: 0.005
+    optimizer: adam
+    output_activation: linear
+    output_size: 1
+    train_function: adam
+    use_lr_scheduler: true
+    weight_decay: 0.00636
+preprocessing:
+  denoising_method: wavelet
+  outlier_removal:
+    factor: 3.0
+    method: zscore
+  smoothing_window: 5
+  standardization: true
+training:
+  cv_folds: 5
+  early_stopping: true
+  evaluation_metrics:
+  - mae
+  - rmse
+  - r2
+  model_type: bpnn
+  random_state: 42
+  target_metrics:
+    mae_threshold: 5.0
+    r2_threshold: 0.85
+    rmse_threshold: 5.0
+  test_experiments:
+  - c6
+  test_size: 0.2
+  train_experiments:
+  - c1
+  - c4

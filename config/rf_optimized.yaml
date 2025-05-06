@@ -25,7 +25,7 @@ feature_selection:
   spearman_threshold: 0.6   # 降低相关性阈值，保留更多特征
   pearson_threshold: 0.6
   n_features_to_select: 20  # 增加特征数量
-  importance_threshold: 0.01  # 使用先前性能最佳配置的阈值
+  importance_threshold: 0.01  # 特征重要性阈值
   use_rfe: true  # 使用递归特征消除
   mutual_info: true  # 使用互信息选择特征
 
@@ -35,42 +35,59 @@ dimensionality_reduction:
 
 models:
   random_forest:
-    # 恢复到先前性能最佳配置
-    n_estimators: 300
-    max_depth: 25
-    min_samples_split: 2
-    min_samples_leaf: 1
+    # 调整参数减少过拟合
+    n_estimators: 500      # 增加树的数量，但控制复杂度
+    max_depth: 10          # 减小树的深度，限制过拟合
+    min_samples_split: 8   # 增加分裂所需最小样本数
+    min_samples_leaf: 4    # 增加叶节点最小样本数
     bootstrap: true
-    max_features: 'sqrt'
+    max_features: 'log2'   # 减少每次分裂考虑的特征数
     criterion: 'squared_error'
     random_state: 42
-    max_samples: 0.9
+    max_samples: 0.7       # 减少每棵树使用的样本比例，增加随机性
     oob_score: true
     warm_start: false
+    ccp_alpha: 0.01        # 添加成本复杂度剪枝参数，控制过拟合
 
-  # 恢复到先前性能最佳的堆叠集成配置
+  # 集成模型配置，同样调整基础模型参数
   ensemble:
-    enabled: true          # 启用集成模型
-    method: 'stacking'     # 使用堆叠集成方法
+    enabled: true
+    method: 'stacking'
     base_models:
-      # 完全恢复到之前性能最佳的基础模型配置
-      - type: 'random_forest'
-        n_estimators: 300
-        max_depth: 25
+      # 调整基础模型参数以减少过拟合
       - type: 'random_forest'
         n_estimators: 500
-        max_depth: 20
+        max_depth: 10
+        min_samples_split: 8
+        min_samples_leaf: 4
+        max_features: 'log2'
+        max_samples: 0.7
+        ccp_alpha: 0.01
       - type: 'random_forest'
         n_estimators: 700
-        max_depth: 15
-      # 添加XGBoost作为补充基础模型
-      - type: 'random_forest'  # XGBoost模拟特性
-        n_estimators: 500
-        max_depth: 8           # 较小的深度但学习率更高的模型
-        bootstrap: false       # 不使用bootstrap，模拟XGBoost
+        max_depth: 8
+        min_samples_split: 10
         min_samples_leaf: 5
-        max_features: 0.8
-    meta_model: 'linear'   # 使用线性模型作为元模型
+        max_features: 'log2'
+        max_samples: 0.6
+        ccp_alpha: 0.015
+      - type: 'random_forest'
+        n_estimators: 400
+        max_depth: 12
+        min_samples_split: 6
+        min_samples_leaf: 3
+        max_features: 0.5
+        max_samples: 0.8
+        ccp_alpha: 0.008
+      # 保留XGBoost模拟模型但调整参数
+      - type: 'random_forest'
+        n_estimators: 500
+        max_depth: 6       # 更小的深度
+        bootstrap: false
+        min_samples_leaf: 6
+        max_features: 0.7
+        ccp_alpha: 0.02
+    meta_model: 'ridge'    # 使用带正则化的ridge回归作为元模型
 
 # 网格搜索参数设置（禁用）
 grid_search:
