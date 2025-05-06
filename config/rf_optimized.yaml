@@ -1,0 +1,106 @@
+# 随机森林优化配置文件
+
+data:
+  raw_data_dir: data/raw/
+  processed_data_dir: data/processed/
+  dataset_path: data/raw/PHM_2010/
+
+preprocessing:
+  denoising_method: 'wavelet'
+  smoothing_window: 5
+  standardization: true  # 标准化处理
+  outlier_removal:
+    method: 'iqr'
+    factor: 1.5
+
+feature_extraction:
+  time_domain_features: ['mean', 'std', 'rms', 'skewness', 'kurtosis', 'peak', 'crest_factor', 'variance', 'min', 'max', 'median', 'range']
+  frequency_domain_features: ['main_frequency_amplitude', 'energy_ratio', 'spectral_entropy', 'spectral_centroid', 'dominant_frequency']
+  wavelet_packet:
+    level: 5  # 增加小波包分解层数
+  statistical_features: true  # 添加统计特征
+  interaction_features: true  # 添加交互特征
+
+feature_selection:
+  spearman_threshold: 0.6   # 降低相关性阈值，保留更多特征
+  pearson_threshold: 0.6
+  n_features_to_select: 20  # 增加特征数量
+  importance_threshold: 0.01  # 使用先前性能最佳配置的阈值
+  use_rfe: true  # 使用递归特征消除
+  mutual_info: true  # 使用互信息选择特征
+
+dimensionality_reduction:
+  pca_n_components: 0.98    # 保留更多方差
+  use_pca: false  # 关闭PCA，仅使用特征选择
+
+models:
+  random_forest:
+    # 恢复到先前性能最佳配置
+    n_estimators: 300
+    max_depth: 25
+    min_samples_split: 2
+    min_samples_leaf: 1
+    bootstrap: true
+    max_features: 'sqrt'
+    criterion: 'squared_error'
+    random_state: 42
+    max_samples: 0.9
+    oob_score: true
+    warm_start: false
+
+  # 恢复到先前性能最佳的堆叠集成配置
+  ensemble:
+    enabled: true          # 启用集成模型
+    method: 'stacking'     # 使用堆叠集成方法
+    base_models:
+      # 完全恢复到之前性能最佳的基础模型配置
+      - type: 'random_forest'
+        n_estimators: 300
+        max_depth: 25
+      - type: 'random_forest'
+        n_estimators: 500
+        max_depth: 20
+      - type: 'random_forest'
+        n_estimators: 700
+        max_depth: 15
+      # 添加XGBoost作为补充基础模型
+      - type: 'random_forest'  # XGBoost模拟特性
+        n_estimators: 500
+        max_depth: 8           # 较小的深度但学习率更高的模型
+        bootstrap: false       # 不使用bootstrap，模拟XGBoost
+        min_samples_leaf: 5
+        max_features: 0.8
+    meta_model: 'linear'   # 使用线性模型作为元模型
+
+# 网格搜索参数设置（禁用）
+grid_search:
+  enabled: false
+  param_grid:
+    n_estimators: [100, 300, 500, 700, 1000]
+    max_depth: [10, 15, 20, 25, 30, None]
+    min_samples_split: [2, 3, 5, 10]
+    min_samples_leaf: [1, 2, 4, 8]
+    max_features: ['sqrt', 'log2', 0.33, 0.5]
+    bootstrap: [true]
+    criterion: ['squared_error', 'absolute_error', 'friedman_mse']
+  scoring: 'neg_mean_absolute_error'
+  cv_folds: 5
+  n_jobs: -1
+
+training:
+  test_size: 0.2
+  cv_folds: 5             # 交叉验证折数
+  random_state: 42
+  model_type: 'random_forest'
+  train_experiments: ['c1', 'c4']
+  test_experiments: ['c6']
+  evaluation_metrics: ['mae', 'rmse', 'r2']
+  target_metrics:
+    mae_threshold: 5.0
+    rmse_threshold: 5.0
+    r2_threshold: 0.85
+  early_stopping: false
+
+logging:
+  log_file: 'project.log'
+  log_level: 'INFO' 
